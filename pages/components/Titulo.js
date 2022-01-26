@@ -1,3 +1,5 @@
+import appConfig from '../../config.json'
+
 function Titulo(props) {
 
     const Tag = props.tag || 'h1';

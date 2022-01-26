@@ -1,4 +1,4 @@
-import appConfig from '../config.json'
+import appConfig from '../config.json';
 import { Box, Button, Text, TextField, Image } from '@skynexui/components'
 import GlobalStyle from './components/GlobalStyle';
 import Titulo from './components/Titulo'
