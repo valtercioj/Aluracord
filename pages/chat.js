@@ -70,7 +70,7 @@ function PaginaDoChat() {
                             onChange={(e) => { setMensagem(e.target.value) }}
                             onKeyPress={
                                 (e) => {
-                                    if (e.code == "Enter") {
+                                    if (e.key === "Enter") {
                                         e.preventDefault()
                                         adicionarMensagem()
                                         setMensagem('')
@@ -88,7 +88,23 @@ function PaginaDoChat() {
                                 color: appConfig.theme.colors.neutrals[200],
                             }}
                         />
+                    <Button
+                            type='button'
+                            label='Entrar'
+                            disabled={mensagem.length<1?true:false}
+                            onClick={(e)=>{
 
+                                adicionarMensagem()
+                                setMensagem('')
+                            }}
+                            
+                            buttonColors={{
+                                contrastColor: appConfig.theme.colors.neutrals["000"],
+                                mainColor: appConfig.theme.colors.primary[500],
+                                mainColorLight: appConfig.theme.colors.primary[400],
+                                mainColorStrong: appConfig.theme.colors.primary[600],
+                            }}
+                        />
                     </Box>
                 </Box>
             </Box>
