@@ -67,7 +67,7 @@ export default function PaginaInicial() {
                             onChange={(e)=>setUsername(e.target.value)}
                         />
                         <Button
-                            disabled={username<1?true:false}
+                            disabled={username.length<1?true:false}
                             type='submit'
                             label='Entrar'
                             fullWidth
