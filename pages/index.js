@@ -1,14 +1,16 @@
 import appConfig from '../config.json';
 import { Box, Button, Text, TextField, Image } from '@skynexui/components'
-import GlobalStyle from './components/GlobalStyle';
-import Titulo from './components/Titulo'
-
+import { useState } from 'react';
+import Titulo from './Titulo'
+import {useRouter} from 'next/router'
 export default function PaginaInicial() {
-    const username = 'valtercioj';
 
+    const [username, setUsername] = useState('');
+    const roteamento = useRouter()
+    const img = 'https://thumbs.dreamstime.com/z/old-blue-robot-black-background-ray-view-old-blue-robot-black-background-ray-view-bot-will-put-some-fun-144432578.jpg'
     return (
         <>
-            <GlobalStyle />
+            {console.log(username.length)}
             <Box
                 styleSheet={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -35,6 +37,10 @@ export default function PaginaInicial() {
                     {/* Formulário */}
                     <Box
                         as="form"
+                        onSubmit={(events) =>{
+                            events.preventDefault();
+                            roteamento.push('/chat')
+                        }}
                         styleSheet={{
                             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                             width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
@@ -55,8 +61,13 @@ export default function PaginaInicial() {
                                     backgroundColor: appConfig.theme.colors.neutrals[800],
                                 },
                             }}
+                            placeholder='Insira seu user do Github aqui... 😁'
+                autocomplete="off"
+                            value={username}
+                            onChange={(e)=>setUsername(e.target.value)}
                         />
                         <Button
+                            disabled={username<1?true:false}
                             type='submit'
                             label='Entrar'
                             fullWidth
@@ -92,7 +103,7 @@ export default function PaginaInicial() {
                                 borderRadius: '50%',
                                 marginBottom: '16px',
                             }}
-                            src={`https://github.com/${username}.png`}
+                            src={username.length > 1 ? `https://github.com/${username}.png` : img}
                         />
                         <Text
                             variant="body4"
