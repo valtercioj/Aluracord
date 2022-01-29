@@ -1,7 +1,7 @@
 import appConfig from '../config.json';
 import { Box, Button, Text, TextField, Image } from '@skynexui/components'
 import { useState } from 'react';
-import Titulo from './Titulo'
+import Titulo from '../src/components/Titulo'
 import {useRouter} from 'next/router'
 export default function PaginaInicial() {
 
@@ -10,7 +10,7 @@ export default function PaginaInicial() {
     const img = 'https://thumbs.dreamstime.com/z/old-blue-robot-black-background-ray-view-old-blue-robot-black-background-ray-view-bot-will-put-some-fun-144432578.jpg'
     return (
         <>
-            {console.log(username.length)}
+            
             <Box
                 styleSheet={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -39,7 +39,7 @@ export default function PaginaInicial() {
                         as="form"
                         onSubmit={(events) =>{
                             events.preventDefault();
-                            roteamento.push('/chat')
+                            roteamento.push(`/chat?username=${username}`)
                         }}
                         styleSheet={{
                             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',

@@ -1,23 +1,47 @@
-import { Box, Button, Text, TextField, Image } from '@skynexui/components';
+import { Box, Button, TextField} from '@skynexui/components';
 import appConfig from '../config.json';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import supabaseClient from '../service/api'
+import MessageList from '../src/components/MessageList'
+import Header from '../src/components/Header'
+import { useRouter } from 'next/router'
+
 function PaginaDoChat() {
+    const roteamento = useRouter()
+    const username = roteamento.query.username
     const [mensagem, setMensagem] = useState('')
     const [listaMensagem, setListaMensagem] = useState([])
-
+    
+    const mostrarMensagen=()=>{
+        supabaseClient
+            .from('mensagens')
+            .select('*')
+            .then(({ data }) => {
+                setListaMensagem(data)
+            })
+    }
+    
     const adicionarMensagem = () => {
         const dados = {
-            id: listaMensagem.length + 1,
-            from: 'valtercioj',
+            from: username,
             mensage: mensagem
         }
-        setListaMensagem([dados,...listaMensagem])
+        supabaseClient.from('mensagens').insert([
+            dados
+        ]).then(({ data }) => {
+            setListaMensagem([data[0], ...listaMensagem])
+        })
+    
     }
+
+    useEffect(() => {
+        mostrarMensagen()
+    }, [])
 
     return (
         <Box
             styleSheet={{
-                
+
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 backgroundColor: appConfig.theme.colors.primary[500],
                 backgroundImage: `url(https://c.wallhere.com/photos/9a/01/1920x1080_px_computer_cyberpunk_Futuristic_Interfaces-833179.jpg!d)`,
@@ -28,7 +52,7 @@ function PaginaDoChat() {
             <Box
                 styleSheet={{
                     display: 'flex',
-                    
+
                     flexDirection: 'column',
                     flex: 1,
                     boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
@@ -40,7 +64,7 @@ function PaginaDoChat() {
                     padding: '32px',
                 }}
             >
-                <Header />
+                <Header username={username} />
                 <Box
                     styleSheet={{
                         position: 'relative',
@@ -71,33 +95,37 @@ function PaginaDoChat() {
                             onKeyPress={
                                 (e) => {
                                     if (e.key === "Enter") {
-                                        e.preventDefault()
-                                        adicionarMensagem()
-                                        setMensagem('')
-                                    }}
+                                        if (mensagem.trim() != '') {
+
+                                            e.preventDefault()
+                                            adicionarMensagem()
+                                            setMensagem('')
+                                        }
+                                    }
+                                }
                             }
                             styleSheet={{
                                 width: '100%',
-                                border:'1px solid #00cae0',
+                                border: '1px solid #00cae0',
                                 resize: 'none',
                                 borderRadius: '5px',
                                 padding: '6px 8px',
                                 backgroundColor: appConfig.theme.colors.neutrals[800],
                                 marginRight: '12px',
-                                
+
                                 color: appConfig.theme.colors.neutrals[200],
                             }}
                         />
-                    <Button
+                        <Button
                             type='button'
                             label='Entrar'
-                            disabled={mensagem.length<1?true:false}
-                            onClick={(e)=>{
+                            disabled={mensagem.trim() != ''? false : true}
+                            onClick={(e) => {
 
                                 adicionarMensagem()
                                 setMensagem('')
                             }}
-                            
+
                             buttonColors={{
                                 contrastColor: appConfig.theme.colors.neutrals["000"],
                                 mainColor: appConfig.theme.colors.primary[500],
@@ -112,88 +140,7 @@ function PaginaDoChat() {
     )
 }
 
-function Header() {
-    return (
-        <>
-            <Box styleSheet={{ width: '100%', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
-                <Text variant='heading5'>
-                    Chat
-                </Text>
-                <Button
-                    variant='tertiary'
-                    colorVariant='neutral'
-                    label='Logout'
-                    href="/"
-                />
-            </Box>
-        </>
-    )
-}
 
-function MessageList({ messagemLista }) {
-    return (
-        <Box
-            tag="ul"
-            styleSheet={{
-                overflow: 'scroll',
-                display: 'flex',
-                
-                flexDirection: 'column-reverse',
-                flex: 1,
-                color: appConfig.theme.colors.neutrals["000"],
-                marginBottom: '16px',
-            }}
-        >
-            {messagemLista.map((mensagem) => {
-                return (
-                    <Text
-                        key={mensagem.id}
-                        tag="li"
-                        styleSheet={{
-                            borderRadius: '5px',
-                            padding: '6px',
-                            marginBottom: '12px',
-                            hover: {
-                                backgroundColor: appConfig.theme.colors.neutrals[700],
-                            }
 
-                        }}
-                    >
-                        <Box
-                            styleSheet={{
-                                marginBottom: '8px',
-                            }}
-                        >
-                            <Image
-                                styleSheet={{
-                                    width: '20px',
-                                    height: '20px',
-                                    borderRadius: '50%',
-                                    display: 'inline-block',
-                                    marginRight: '8px',
-                                }}
-                                src={`https://github.com/${mensagem.from}.png`}
-                            />
-                            <Text tag="strong">
-                                {mensagem.from}
-                            </Text>
-                            <Text
-                                styleSheet={{
-                                    fontSize: '10px',
-                                    marginLeft: '8px',
-                                    color: appConfig.theme.colors.neutrals[300],
-                                }}
-                                tag="span"
-                            >
-                                {(new Date().toLocaleDateString())}
-                            </Text>
-                        </Box>
-                                {mensagem.mensage}
-                    </Text>
-                )
-            })}
 
-        </Box>
-    )
-}
 export default PaginaDoChat;
