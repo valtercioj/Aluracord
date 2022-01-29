@@ -118,7 +118,7 @@ function PaginaDoChat() {
                         />
                         <Button
                             type='button'
-                            label='Entrar'
+                            label='Enviar'
                             disabled={mensagem.trim() != ''? false : true}
                             onClick={(e) => {
 
