@@ -1,27 +1,38 @@
-import { Box, Button, TextField} from '@skynexui/components';
+import { Box, Button, TextField } from '@skynexui/components';
 import appConfig from '../config.json';
 import { useState, useEffect } from 'react'
 import supabaseClient from '../service/api'
+import { ButtonSendSticker } from '../src/components/ButtonSendSticker'
 import MessageList from '../src/components/MessageList'
 import Header from '../src/components/Header'
 import { useRouter } from 'next/router'
+function escutaMensagemEmTempoReal(criarMensagem){
+    return supabaseClient
+        .from('mensagens')
+        .on('INSERT', (dados) =>{
+            criarMensagem(dados.new)
+        })
+        .subscribe();
+}
+
 
 function PaginaDoChat() {
     const roteamento = useRouter()
-    const username = roteamento.query.username
+    let username = roteamento.query.username
     const [mensagem, setMensagem] = useState('')
     const [listaMensagem, setListaMensagem] = useState([])
-    
-    const mostrarMensagen=()=>{
+    if(username===''){username='Anonimo(a)'}
+    const mostrarMensagen = () => {
         supabaseClient
             .from('mensagens')
             .select('*')
+            .order('id', { ascending: false})
             .then(({ data }) => {
                 setListaMensagem(data)
             })
     }
-    
-    const adicionarMensagem = () => {
+
+    const adicionarMensagem = (mensagem) => {
         const dados = {
             from: username,
             mensage: mensagem
@@ -29,13 +40,18 @@ function PaginaDoChat() {
         supabaseClient.from('mensagens').insert([
             dados
         ]).then(({ data }) => {
-            setListaMensagem([data[0], ...listaMensagem])
+            console.log(data)
         })
-    
+
     }
 
     useEffect(() => {
         mostrarMensagen()
+        escutaMensagemEmTempoReal((dados)=>{
+            setListaMensagem((valorAtual)=>{
+               return [dados, ...valorAtual]
+            })
+        })
     }, [])
 
     return (
@@ -43,8 +59,7 @@ function PaginaDoChat() {
             styleSheet={{
 
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                backgroundColor: appConfig.theme.colors.primary[500],
-                backgroundImage: `url(https://c.wallhere.com/photos/9a/01/1920x1080_px_computer_cyberpunk_Futuristic_Interfaces-833179.jpg!d)`,
+                backgroundImage: `url(https://wallpaper.dog/large/20495729.png)`,
                 backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
                 color: appConfig.theme.colors.neutrals['000']
             }}
@@ -57,7 +72,7 @@ function PaginaDoChat() {
                     flex: 1,
                     boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
                     borderRadius: '5px',
-                    backgroundColor: appConfig.theme.colors.neutrals[700],
+                    backgroundColor: appConfig.theme.colors.transparente.fundo,
                     height: '100%',
                     maxWidth: '85%',
                     maxHeight: '95vh',
@@ -71,14 +86,13 @@ function PaginaDoChat() {
                         display: 'flex',
                         flex: 1,
                         height: '80%',
-                        backgroundColor: appConfig.theme.colors.neutrals[600],
                         flexDirection: 'column',
                         borderRadius: '5px',
                         padding: '16px',
                     }}
                 >
 
-                    <MessageList messagemLista={listaMensagem} />
+                    <MessageList messagemLista={listaMensagem}/>
 
                     <Box
                         as="form"
@@ -98,7 +112,7 @@ function PaginaDoChat() {
                                         if (mensagem.trim() != '') {
 
                                             e.preventDefault()
-                                            adicionarMensagem()
+                                            adicionarMensagem(mensagem)
                                             setMensagem('')
                                         }
                                     }
@@ -116,21 +130,26 @@ function PaginaDoChat() {
                                 color: appConfig.theme.colors.neutrals[200],
                             }}
                         />
+                        <ButtonSendSticker
+                            onStickerClick={(sticker) => {
+                                adicionarMensagem(':sticker: ' + sticker)
+                            }}
+                        />
                         <Button
                             type='button'
                             label='Entrar'
-                            disabled={mensagem.trim() != ''? false : true}
+                            disabled={mensagem.trim() != '' ? false : true}
                             onClick={(e) => {
-
-                                adicionarMensagem()
+                                adicionarMensagem(mensagem)
+                                console.log(mensagem)
                                 setMensagem('')
                             }}
 
                             buttonColors={{
                                 contrastColor: appConfig.theme.colors.neutrals["000"],
-                                mainColor: appConfig.theme.colors.primary[500],
+                                mainColor: appConfig.theme.colors.transparente.buttonRed,
                                 mainColorLight: appConfig.theme.colors.primary[400],
-                                mainColorStrong: appConfig.theme.colors.primary[600],
+                                mainColorStrong: appConfig.theme.colors.transparente.fundo,
                             }}
                         />
                     </Box>

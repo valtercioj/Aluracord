@@ -7,7 +7,7 @@ export default function PaginaInicial() {
 
     const [username, setUsername] = useState('');
     const roteamento = useRouter()
-    const img = 'https://thumbs.dreamstime.com/z/old-blue-robot-black-background-ray-view-old-blue-robot-black-background-ray-view-bot-will-put-some-fun-144432578.jpg'
+    const img = 'https://pa1.narvii.com/6538/c0be54a6a8c99d0d71794451c1d82e419f1be178_hq.gif'
     return (
         <>
             
@@ -15,7 +15,7 @@ export default function PaginaInicial() {
                 styleSheet={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     
-                    backgroundImage: 'url(https://c.wallhere.com/photos/9a/01/1920x1080_px_computer_cyberpunk_Futuristic_Interfaces-833179.jpg!d)',
+                    backgroundImage: 'url(https://wallpaper.dog/large/20495729.png)',
                     backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
                 }}
             >
@@ -31,7 +31,7 @@ export default function PaginaInicial() {
                         width: '100%', maxWidth: '700px',
                         borderRadius: '5px', padding: '32px', margin: '16px',
                         boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
-                        backgroundColor: appConfig.theme.colors.neutrals[700],
+                        backgroundColor: appConfig.theme.colors.transparente.fundo,
                     }}
                 >
                     {/* Formulário */}
@@ -46,7 +46,7 @@ export default function PaginaInicial() {
                             width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
                         }}
                     >
-                        <Titulo tag="h2">Boas vindas de volta!</Titulo>
+                        <Titulo tag="h1">Boas vindas renegados</Titulo>
                         <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
                             {appConfig.name}
                         </Text>
@@ -57,7 +57,7 @@ export default function PaginaInicial() {
                                 neutral: {
                                     textColor: appConfig.theme.colors.neutrals[200],
                                     mainColor: appConfig.theme.colors.neutrals[900],
-                                    mainColorHighlight: appConfig.theme.colors.primary[500],
+                                    mainColorHighlight: appConfig.theme.colors.transparente.buttonRed,
                                     backgroundColor: appConfig.theme.colors.neutrals[800],
                                 },
                             }}
@@ -73,9 +73,9 @@ export default function PaginaInicial() {
                             fullWidth
                             buttonColors={{
                                 contrastColor: appConfig.theme.colors.neutrals["000"],
-                                mainColor: appConfig.theme.colors.primary[500],
+                                mainColor: appConfig.theme.colors.transparente.buttonRed,
                                 mainColorLight: appConfig.theme.colors.primary[400],
-                                mainColorStrong: appConfig.theme.colors.primary[600],
+                                mainColorStrong: appConfig.theme.colors.transparente.fundo,
                             }}
                         />
                     </Box>
