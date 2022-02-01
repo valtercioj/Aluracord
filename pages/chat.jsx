@@ -137,8 +137,11 @@ function PaginaDoChat() {
                         />
                         <Button
                             type='button'
+
                             label='Entrar'
                             disabled={mensagem.trim() != '' ? false : true}
+
+
                             onClick={(e) => {
                                 adicionarMensagem(mensagem)
                                 console.log(mensagem)
